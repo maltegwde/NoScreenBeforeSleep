@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_push_notifications/pages/MyHomePage.dart';
+import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Just Water',
+      title: 'No❌Screen📱Before🕦Sleep😴',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

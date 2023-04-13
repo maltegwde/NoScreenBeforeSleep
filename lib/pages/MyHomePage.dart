@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_push_notifications/pages/MySecondScreen.dart';
-import 'package:flutter_push_notifications/utils/notification_service.dart';
+import 'package:no_screen_before_sleep/pages/MySecondScreen.dart';
+import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("JustWater"),
+        title: const Text("    No📱\nBefore😴"),
         centerTitle: true,
       ),
       body: Column(
@@ -61,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             body: "Time to drink some water!",
                             payload: "You just took water! Huurray!",
                             hour: 23,
-                            minute: 34,
-                            second: 40);
+                            minute: 45,
+                            second: 10);
                   },
                   onLongPress: () async {
                     await notificationService.showScheduledLocalNotification(

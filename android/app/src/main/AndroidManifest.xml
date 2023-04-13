@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_push_notifications">
+    package="de.schneider.no_screen_before_sleep">
     <application
-        android:label="Just Water"
+        android:label="No❌Screen📱Before🕦Sleep😴"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

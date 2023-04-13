@@ -1,5 +1,5 @@
-name: flutter_push_notifications
-description: A new Flutter project.
+name: no_screen_before_sleep
+description: Reminds you to put your phone away before going to sleep.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
