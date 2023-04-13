@@ -130,9 +130,9 @@ class NotificationService {
     required String title,
     required String body,
     required String payload,
-    required int hour,
     required int seconds,
   }) async {
+    print("showScheduledLocalNotification");
     final platformChannelSpecifics = await _notificationDetails();
     await _localNotifications.zonedSchedule(
       id,
@@ -147,6 +147,23 @@ class NotificationService {
     );
   }
 
+  Future<void> showLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    print("showLocalNotification");
+    final platformChannelSpecifics = await _notificationDetails();
+    await _localNotifications.show(
+      id,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: payload,
+    );
+  }
+
   Future<void> scheduleFixedTimeLocalNotification({
     required int id,
     required String title,
@@ -156,13 +173,18 @@ class NotificationService {
     int minute = 0,
     int second = 0,
   }) async {
+    print("scheduleFixedTimeLocalNotification");
     final platformChannelSpecifics = await _notificationDetails();
+
+    tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
     Duration diff =
         _nextInstanceOfLocalTime(hour: hour, minute: minute, second: second)
-            .difference(tz.TZDateTime.now(tz.local));
+            .difference(now);
 
-    tz.TZDateTime scheduledDate = tz.TZDateTime.now(tz.local).add(diff);
+    tz.TZDateTime scheduledDate = now.add(diff);
+
+    print("Current time: $now\nScheduled date: $scheduledDate");
 
     await _localNotifications.zonedSchedule(
       id,
@@ -177,22 +199,6 @@ class NotificationService {
     );
   }
 
-  Future<void> showLocalNotification({
-    required int id,
-    required String title,
-    required String body,
-    required String payload,
-  }) async {
-    final platformChannelSpecifics = await _notificationDetails();
-    await _localNotifications.show(
-      id,
-      title,
-      body,
-      platformChannelSpecifics,
-      payload: payload,
-    );
-  }
-
   Future<void> showPeriodicLocalNotification({
     required int id,
     required String title,
@@ -200,6 +206,7 @@ class NotificationService {
     required String payload,
     required RepeatInterval interval,
   }) async {
+    print("showPeriodicLocalNotification");
     final platformChannelSpecifics = await _notificationDetails();
     await _localNotifications.periodicallyShow(
       id,
@@ -215,6 +222,7 @@ class NotificationService {
   Future<void> showGroupedNotifications({
     required String title,
   }) async {
+    print("showGroupedNotifications");
     final platformChannelSpecifics = await _notificationDetails();
     final groupedPlatformChannelSpecifics = await _groupedNotificationDetails();
     await _localNotifications.show(

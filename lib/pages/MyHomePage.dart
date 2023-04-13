@@ -60,9 +60,17 @@ class _MyHomePageState extends State<MyHomePage> {
                             title: "Drink Water",
                             body: "Time to drink some water!",
                             payload: "You just took water! Huurray!",
-                            hour: 21,
-                            minute: 25,
-                            second: 50);
+                            hour: 23,
+                            minute: 34,
+                            second: 40);
+                  },
+                  onLongPress: () async {
+                    await notificationService.showScheduledLocalNotification(
+                        id: 2,
+                        title: "Drink Water",
+                        body: "Time to drink some water!",
+                        payload: "You just took water! Huurray!",
+                        seconds: 5);
                   },
                   child: const Text("Schedule Drink "))
             ],
