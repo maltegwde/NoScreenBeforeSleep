@@ -77,28 +77,6 @@ class NotificationService {
     return platformChannelSpecifics;
   }
 
-  Future<void> showScheduledLocalNotification({
-    required int id,
-    required String title,
-    required String body,
-    required String payload,
-    required int seconds,
-  }) async {
-    print("showScheduledLocalNotification");
-    final platformChannelSpecifics = await _notificationDetails();
-    await _localNotifications.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.now(tz.local).add(Duration(seconds: seconds)),
-      platformChannelSpecifics,
-      payload: payload,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-    );
-  }
-
   Future<void> showLocalNotification({
     required int id,
     required String title,
@@ -113,6 +91,28 @@ class NotificationService {
       body,
       platformChannelSpecifics,
       payload: payload,
+    );
+  }
+
+  Future<void> showScheduledLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+    required Duration duration,
+  }) async {
+    print("showScheduledLocalNotification");
+    final platformChannelSpecifics = await _notificationDetails();
+    await _localNotifications.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.now(tz.local).add(duration),
+      platformChannelSpecifics,
+      payload: payload,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
     );
   }
 
@@ -136,7 +136,7 @@ class NotificationService {
 
     tz.TZDateTime scheduledDate = now.add(diff);
 
-    print("Current time: $now\nScheduled date: $scheduledDate");
+    print("Current time:   $now\nScheduled date: $scheduledDate");
 
     await _localNotifications.zonedSchedule(
       id,

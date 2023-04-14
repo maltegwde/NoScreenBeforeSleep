@@ -61,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             body: "Time to drink some water!",
                             payload: "You just took water! Huurray!",
                             hour: 13,
-                            minute: 30,
-                            second: 15);
+                            minute: 33,
+                            second: 20);
                   },
                   onLongPress: () async {
                     await notificationService.showScheduledLocalNotification(
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         title: "Drink Water",
                         body: "Time to drink some water!",
                         payload: "You just took water! Huurray!",
-                        seconds: 11);
+                        duration: Duration(seconds: 12));
                   },
                   child: const Text("Schedule Drink "))
             ],
