@@ -60,9 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             title: "Drink Water",
                             body: "Time to drink some water!",
                             payload: "You just took water! Huurray!",
-                            hour: 23,
-                            minute: 45,
-                            second: 10);
+                            hour: 0,
+                            minute: 5,
+                            second: 45);
                   },
                   onLongPress: () async {
                     await notificationService.showScheduledLocalNotification(
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         title: "Drink Water",
                         body: "Time to drink some water!",
                         payload: "You just took water! Huurray!",
-                        seconds: 5);
+                        seconds: 2);
                   },
                   child: const Text("Schedule Drink "))
             ],
@@ -78,12 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    await notificationService.showGroupedNotifications(
-                        title: "Drink Water");
-                  },
-                  child: const Text("Drink grouped")),
               ElevatedButton(
                 onPressed: () {
                   notificationService.cancelAllNotifications();

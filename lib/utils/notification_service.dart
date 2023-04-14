@@ -77,47 +77,6 @@ class NotificationService {
     return platformChannelSpecifics;
   }
 
-  Future<NotificationDetails> _groupedNotificationDetails() async {
-    const List<String> lines = <String>[
-      'group 1 First drink',
-      'group 1   Second drink',
-      'group 1   Third drink',
-      'group 2 First drink',
-      'group 2   Second drink'
-    ];
-    const InboxStyleInformation inboxStyleInformation = InboxStyleInformation(
-        lines,
-        contentTitle: '5 messages',
-        summaryText: 'missed drinks');
-    AndroidNotificationDetails androidPlatformChannelSpecifics =
-        const AndroidNotificationDetails(
-      'channel id',
-      'channel name',
-      groupKey: 'com.example.flutter_push_notifications',
-      channelDescription: 'channel description',
-      setAsGroupSummary: true,
-      importance: Importance.max,
-      priority: Priority.max,
-      playSound: true,
-      ticker: 'ticker',
-      styleInformation: inboxStyleInformation,
-      color: Color(0xff2196f3),
-    );
-
-    const IOSNotificationDetails iosNotificationDetails =
-        IOSNotificationDetails(threadIdentifier: "thread2");
-
-    final details = await _localNotifications.getNotificationAppLaunchDetails();
-    if (details != null && details.didNotificationLaunchApp) {
-      behaviorSubject.add(details.payload!);
-    }
-
-    NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
-
-    return platformChannelSpecifics;
-  }
-
   Future<void> showScheduledLocalNotification({
     required int id,
     required String title,
@@ -209,54 +168,6 @@ class NotificationService {
       platformChannelSpecifics,
       payload: payload,
       androidAllowWhileIdle: false,
-    );
-  }
-
-  Future<void> showGroupedNotifications({
-    required String title,
-  }) async {
-    print("showGroupedNotifications");
-    final platformChannelSpecifics = await _notificationDetails();
-    final groupedPlatformChannelSpecifics = await _groupedNotificationDetails();
-    await _localNotifications.show(
-      0,
-      "group 1",
-      "First drink",
-      platformChannelSpecifics,
-    );
-    await _localNotifications.show(
-      1,
-      "group 1",
-      "Second drink",
-      platformChannelSpecifics,
-    );
-    await _localNotifications.show(
-      3,
-      "group 1",
-      "Third drink",
-      platformChannelSpecifics,
-    );
-    await _localNotifications.show(
-      4,
-      "group 2",
-      "First drink",
-      Platform.isIOS
-          ? groupedPlatformChannelSpecifics
-          : platformChannelSpecifics,
-    );
-    await _localNotifications.show(
-      5,
-      "group 2",
-      "Second drink",
-      Platform.isIOS
-          ? groupedPlatformChannelSpecifics
-          : platformChannelSpecifics,
-    );
-    await _localNotifications.show(
-      6,
-      Platform.isIOS ? "group 2" : "Attention",
-      Platform.isIOS ? "Third drink" : "5 missed drinks",
-      groupedPlatformChannelSpecifics,
     );
   }
 
