@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
 
 class MySecondScreen extends StatelessWidget {
   final String payload;
@@ -8,21 +9,13 @@ class MySecondScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("JustWater"),
+        title: const Text(MyHomePage.title),
         centerTitle: true,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 100),
-              child: Image.asset(
-                "assets/images/justwater.png",
-              ),
-            ),
-            Text(payload)
-          ],
+          children: [Text(payload)],
         ),
       ),
     );

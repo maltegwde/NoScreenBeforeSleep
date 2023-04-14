@@ -1,43 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
 
-import 'dart:convert';
-import 'package:no_screen_before_sleep/data/picker_data.dart';
-import 'package:flutter_picker/flutter_picker.dart';
-
-class SleepTimeSelectScreen extends StatelessWidget {
+class SleepTimeSelectScreen extends StatefulWidget {
   const SleepTimeSelectScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SleepTimeSelectScreen> createState() => _SleepTimeSelectScreenState();
+}
+
+class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
+  TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Test title"),
+          title: const Text(MyHomePage.title),
           centerTitle: true,
         ),
         body: Builder(builder: (context) {
           return Center(
               child: ElevatedButton(
             onPressed: () {
-              showPicker(context);
+              //showPicker(context);
+              /*
+              Future<TimeOfDay?> selectedTime = showTimePicker(
+                initialTime: TimeOfDay.now(),
+                context: context,
+              );
+              */
+
+              getTime(context);
             },
-            child: const Text('Testtext123'),
+            child: const Text('Select TimeOfDay'),
           ));
         }));
   }
 
-  showPicker(BuildContext context) async {
-    Picker picker = Picker(
-        adapter: PickerDataAdapter<String>(
-            pickerData: JsonDecoder().convert(pickerData1)),
-        changeToFirst: false,
-        textAlign: TextAlign.left,
-        textStyle: TextStyle(color: Colors.blue),
-        selectedTextStyle: TextStyle(color: Colors.red),
-        columnPadding: const EdgeInsets.all(8.0),
-        onConfirm: (Picker picker, List value) {
-          print(value.toString());
-          print(picker.getSelectedValues());
-        });
-    picker.showBottomSheet(context);
+  Future<void> getTime(BuildContext context) async {
+    TimeOfDay? selectedTime = await showTimePicker(
+      initialTime: TimeOfDay.now(),
+      context: context,
+    );
+
+    if (selectedTime != null) {
+      selectedToD = selectedTime;
+      print('Selected time: ${selectedToD.hour}:${selectedToD.minute}');
+    }
   }
 }

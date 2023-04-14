@@ -13,12 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'No❌Screen📱Before🕦Sleep😴',
+      title: MyHomePage.title,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
       ),
-      //home: const MyHomePage(),
-      home: const SleepTimeSelectScreen(),
+      home: const MyHomePage(),
+      //home: const SleepTimeSelectScreen(),
     );
   }
 }

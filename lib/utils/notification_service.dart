@@ -15,7 +15,7 @@ class NotificationService {
   final _localNotifications = FlutterLocalNotificationsPlugin();
   Future<void> initializePlatformNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_stat_justwater');
+        AndroidInitializationSettings('icon_small');
 
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
@@ -103,11 +103,17 @@ class NotificationService {
   }) async {
     print("scheduleDelayedLocalNotification");
     final platformChannelSpecifics = await _notificationDetails();
+
+    tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledTime = now.add(duration);
+
+    print("Current time:   $now\nScheduled date: $scheduledTime");
+
     await _localNotifications.zonedSchedule(
       id,
       title,
       body,
-      tz.TZDateTime.now(tz.local).add(duration),
+      scheduledTime,
       platformChannelSpecifics,
       payload: payload,
       uiLocalNotificationDateInterpretation:
