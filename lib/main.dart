@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
+import 'package:no_screen_before_sleep/pages/SleepTimeSelectScreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      //home: const MyHomePage(),
+      home: const SleepTimeSelectScreen(),
     );
   }
 }
