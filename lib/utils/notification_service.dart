@@ -94,14 +94,14 @@ class NotificationService {
     );
   }
 
-  Future<void> showScheduledLocalNotification({
+  Future<void> scheduleDelayedLocalNotification({
     required int id,
     required String title,
     required String body,
     required String payload,
     required Duration duration,
   }) async {
-    print("showScheduledLocalNotification");
+    print("scheduleDelayedLocalNotification");
     final platformChannelSpecifics = await _notificationDetails();
     await _localNotifications.zonedSchedule(
       id,

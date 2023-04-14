@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:no_screen_before_sleep/pages/MySecondScreen.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
@@ -46,23 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               ElevatedButton(
                   onPressed: () async {
-                    await notificationService.showLocalNotification(
-                        id: 0,
-                        title: "Drink Water",
-                        body: "Time to drink some water!",
-                        payload: "You just took water! Huurray!");
-                  },
-                  onLongPress: () async {
-                    await notificationService.showPeriodicLocalNotification(
-                        id: 0,
-                        title: "Drink Water",
-                        body: "Time to drink some water!",
-                        payload: "You just took water! Huurray!",
-                        interval: RepeatInterval.everyMinute);
-                  },
-                  child: const Text("Drink Now")),
-              ElevatedButton(
-                  onPressed: () async {
                     await notificationService
                         .scheduleFixedTimeLocalNotification(
                             id: 1,
@@ -73,17 +55,21 @@ class _MyHomePageState extends State<MyHomePage> {
                             minute: 33,
                             second: 20);
                   },
-                  onLongPress: () async {
-                    await notificationService.showScheduledLocalNotification(
-                        id: 2,
-                        title: "Drink Water",
-                        body: "Time to drink some water!",
-                        payload: "You just took water! Huurray!",
-                        duration: Duration(seconds: 12));
-                  },
-                  child: const Text("Schedule Drink "))
+                  child: const Text("Schedule fixed time notification")),
             ],
           ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            ElevatedButton(
+                onPressed: () async {
+                  await notificationService.scheduleDelayedLocalNotification(
+                      id: 2,
+                      title: "Drink Water",
+                      body: "Time to drink some water!",
+                      payload: "You just took water! Huurray!",
+                      duration: Duration(seconds: 12));
+                },
+                child: const Text("Schedule delayed notification "))
+          ]),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -92,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   notificationService.cancelAllNotifications();
                 },
                 child: const Text(
-                  "Cancel All Drinks",
+                  "Cancel All Notifications",
                 ),
               )
             ],
