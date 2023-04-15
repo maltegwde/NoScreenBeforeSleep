@@ -14,29 +14,10 @@ class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
   TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text(MyHomePage.title),
-          centerTitle: true,
-        ),
-        body: Builder(builder: (context) {
-          return Center(
-              child: ElevatedButton(
-            onPressed: () async {
-              await selectTimeDialog(context);
-              await notificationService.scheduleFixedTimeLocalNotification(
-                  id: 1,
-                  title: "Put your phone down",
-                  body: "Your NoScreen time starts now.",
-                  payload: "Put your phone down now",
-                  hour: selectedToD.hour,
-                  minute: selectedToD.minute,
-                  second: 0);
-            },
-            child: const Text('Select TimeOfDay'),
-          ));
-        }));
+  void initState() {
+    notificationService = NotificationService();
+    notificationService.initializePlatformNotifications();
+    super.initState();
   }
 
   Future<void> selectTimeDialog(BuildContext context) async {
@@ -49,5 +30,53 @@ class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
       selectedToD = selectedTime;
       print('Selected time: ${selectedToD.hour}:${selectedToD.minute}');
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text(MyHomePage.title),
+          centerTitle: true,
+        ),
+        body: Builder(
+          builder: (context) {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      margin: const EdgeInsets.only(top: 80),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "By which time\n   do you plan\n     to sleep?",
+                        textScaleFactor: 2.8,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.only(bottom: 150),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            await selectTimeDialog(context);
+                            await notificationService
+                                .scheduleFixedTimeLocalNotification(
+                                    id: 1,
+                                    title: "Put your phone down",
+                                    body: "Your NoScreen time starts now.",
+                                    payload: "No Screen time is active!",
+                                    hour: selectedToD.hour,
+                                    minute: selectedToD.minute,
+                                    second: 0);
+                          },
+                          onLongPress: () async {
+                            await notificationService.showLocalNotification(
+                              id: 1,
+                              title: "Put your phone down",
+                              body: "Your NoScreen time starts now.",
+                              payload: "No Screen time is active!",
+                            );
+                          },
+                          child: const Text('Select TimeOfDay'))),
+                ]);
+          },
+        ));
   }
 }

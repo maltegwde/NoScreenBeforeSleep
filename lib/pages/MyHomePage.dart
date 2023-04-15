@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:no_screen_before_sleep/pages/MySecondScreen.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -18,18 +17,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     notificationService = NotificationService();
-    listenToNotificationStream();
     notificationService.initializePlatformNotifications();
     super.initState();
   }
-
-  void listenToNotificationStream() =>
-      notificationService.behaviorSubject.listen((payload) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MySecondScreen(payload: payload)));
-      });
 
   Future<void> selectTimeDialog(BuildContext context) async {
     TimeOfDay? selectedTime = await showTimePicker(
@@ -71,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             id: 1,
                             title: "Put your phone down",
                             body: "Your NoScreen time starts now.",
-                            payload: "You just took water! Huurray!",
+                            payload: "No Screen time is active!",
                             hour: selectedToD.hour,
                             minute: selectedToD.minute,
                             second: 0);

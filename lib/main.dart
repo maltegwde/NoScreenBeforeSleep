@@ -15,10 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: MyHomePage.title,
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.indigo,
       ),
-      home: const MyHomePage(),
-      //home: const SleepTimeSelectScreen(),
+      home: const SleepTimeSelectScreen(),
     );
   }
 }

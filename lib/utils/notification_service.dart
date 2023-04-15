@@ -15,7 +15,7 @@ class NotificationService {
   final _localNotifications = FlutterLocalNotificationsPlugin();
   Future<void> initializePlatformNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('icon_small');
+        AndroidInitializationSettings('@mipmap/notification_icon');
 
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
