@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             margin: const EdgeInsets.only(bottom: 60),
             child: Image.asset(
-              "assets/images/nsbs_icon.png",
+              "android/app/src/main/res/mipmap/ic_launcher.png",
               width: 240,
             ),
           ),

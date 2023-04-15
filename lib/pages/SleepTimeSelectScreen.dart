@@ -41,6 +41,7 @@ class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
     TimeOfDay? selectedTime = await showTimePicker(
       initialTime: TimeOfDay.now(),
       context: context,
+      helpText: "When do you want to sleep?",
     );
 
     if (selectedTime != null) {
