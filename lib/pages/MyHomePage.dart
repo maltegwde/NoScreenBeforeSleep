@@ -21,18 +21,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  Future<void> selectTimeDialog(BuildContext context) async {
-    TimeOfDay? selectedTime = await showTimePicker(
-        initialTime: TimeOfDay.now(),
-        context: context,
-        helpText: "When do you want to sleep?");
-
-    if (selectedTime != null) {
-      selectedToD = selectedTime;
-      print('Selected time: ${selectedToD.hour}:${selectedToD.minute}');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,16 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               ElevatedButton(
                   onPressed: () async {
-                    await selectTimeDialog(context);
-                    await notificationService
-                        .scheduleFixedTimeLocalNotification(
-                            id: 1,
-                            title: "Put your phone down",
-                            body: "Your NoScreen time starts now.",
-                            payload: "No Screen time is active!",
-                            hour: selectedToD.hour,
-                            minute: selectedToD.minute,
-                            second: 0);
+                    await notificationService.showLocalNotification(
+                      id: 1,
+                      title: "Put your phone down",
+                      body: "Your NoScreen time starts now.",
+                      payload: "No Screen time is active!",
+                    );
                   },
                   child: const Text("Schedule fixed time notification")),
             ],

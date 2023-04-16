@@ -31,11 +31,7 @@ class NotificationService {
     );
 
     tz.initializeTimeZones();
-    tz.setLocalLocation(
-      tz.getLocation(
-        await FlutterTimezone.getLocalTimezone(),
-      ),
-    );
+    tz.setLocalLocation(tz.getLocation("Europe/Berlin"));
 
     await _localNotifications.initialize(
       initializationSettings,

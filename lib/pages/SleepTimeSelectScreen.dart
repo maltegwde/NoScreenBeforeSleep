@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
 class SleepTimeSelectScreen extends StatefulWidget {
   const SleepTimeSelectScreen({Key? key}) : super(key: key);
 
@@ -12,6 +15,7 @@ class SleepTimeSelectScreen extends StatefulWidget {
 class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
   late final NotificationService notificationService;
   TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
+  bool timeSelected = false;
 
   @override
   void initState() {
@@ -21,13 +25,21 @@ class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
   }
 
   Future<void> selectTimeDialog(BuildContext context) async {
+    timeSelected = false;
+
+    // TimeOfDay.now() gives wrong time (utc). workaround:
+    tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    TimeOfDay initTime = TimeOfDay(hour: now.hour, minute: now.minute);
+
     TimeOfDay? selectedTime = await showTimePicker(
-        initialTime: TimeOfDay.now(),
+        initialTime: initTime,
         context: context,
-        helpText: "When do you want to sleep?");
+        helpText: "When do1 you want to sleep?");
 
     if (selectedTime != null) {
       selectedToD = selectedTime;
+      timeSelected = true;
+      print("timeSelected: $timeSelected");
       print('Selected time: ${selectedToD.hour}:${selectedToD.minute}');
     }
   }
@@ -56,23 +68,17 @@ class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
                       child: ElevatedButton(
                           onPressed: () async {
                             await selectTimeDialog(context);
-                            await notificationService
-                                .scheduleFixedTimeLocalNotification(
-                                    id: 1,
-                                    title: "Put your phone down",
-                                    body: "Your NoScreen time starts now.",
-                                    payload: "No Screen time is active!",
-                                    hour: selectedToD.hour,
-                                    minute: selectedToD.minute,
-                                    second: 0);
-                          },
-                          onLongPress: () async {
-                            await notificationService.showLocalNotification(
-                              id: 1,
-                              title: "Put your phone down",
-                              body: "Your NoScreen time starts now.",
-                              payload: "No Screen time is active!",
-                            );
+                            if (timeSelected) {
+                              await notificationService
+                                  .scheduleFixedTimeLocalNotification(
+                                      id: 1,
+                                      title: "Put your phone down",
+                                      body: "Your NoScreen time starts now.",
+                                      payload: "No Screen time is active!",
+                                      hour: selectedToD.hour,
+                                      minute: selectedToD.minute,
+                                      second: 0);
+                            }
                           },
                           child: const Text('Select TimeOfDay'))),
                 ]);
