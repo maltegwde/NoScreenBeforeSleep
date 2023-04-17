@@ -1,18 +1,24 @@
-import 'dart:io';
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
+import 'package:no_screen_before_sleep/pages/NoScreenTimeStarts.dart';
+import 'package:no_screen_before_sleep/pages/SleepTimeSelect.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'package:no_screen_before_sleep/main.dart';
+
 class NotificationService {
   NotificationService();
-  final text = Platform.isIOS;
-  final BehaviorSubject<String> behaviorSubject = BehaviorSubject();
 
+  final Duration noScreenBeforeSleepDuration = Duration(hours: 2, minutes: 0);
+
+  final BehaviorSubject<String> behaviorSubject = BehaviorSubject();
   final _localNotifications = FlutterLocalNotificationsPlugin();
+
   Future<void> initializePlatformNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/notification_icon');
@@ -118,39 +124,82 @@ class NotificationService {
     );
   }
 
-  Future<void> scheduleFixedTimeLocalNotification({
+  Future<void> scheduleNoScreenReminderNotification({
     required int id,
     required String title,
     required String body,
     required String payload,
     required int hour,
     int minute = 0,
-    int second = 0,
+  }) async {
+    print("scheduleNoScreenReminderNotification");
+
+    tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+
+    tz.TZDateTime noScreenNotificationTime =
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+
+    noScreenNotificationTime =
+        noScreenNotificationTime.subtract(noScreenBeforeSleepDuration);
+
+    TimeOfDay notificationTime = TimeOfDay(
+        hour: noScreenNotificationTime.hour,
+        minute: noScreenNotificationTime.minute);
+
+    scheduleFixedTimeLocalNotification(
+        id: id,
+        title: title,
+        body: body,
+        payload: payload,
+        notificationTime: notificationTime);
+  }
+
+  Future<void> scheduleDailyLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+    required TimeOfDay notificationTime,
+  }) async {
+    print("scheduleDailyLocalNotification");
+    scheduleFixedTimeLocalNotification(
+      id: id,
+      title: title,
+      body: body,
+      payload: payload,
+      notificationTime: notificationTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> scheduleFixedTimeLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+    required TimeOfDay notificationTime,
+    DateTimeComponents? matchDateTimeComponents,
   }) async {
     print("scheduleFixedTimeLocalNotification");
     final platformChannelSpecifics = await _notificationDetails();
 
     tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
-    Duration diff =
-        _nextInstanceOfLocalTime(hour: hour, minute: minute, second: second)
-            .difference(now);
+    Duration diff = _nextInstanceOfLocalTime(
+            hour: notificationTime.hour, minute: notificationTime.minute)
+        .difference(now);
 
     tz.TZDateTime scheduledDate = now.add(diff);
 
     print("Current time:   $now\nScheduled date: $scheduledDate");
 
     await _localNotifications.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledDate,
-      platformChannelSpecifics,
-      payload: payload,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-    );
+        id, title, body, scheduledDate, platformChannelSpecifics,
+        payload: payload,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true,
+        matchDateTimeComponents: matchDateTimeComponents);
   }
 
   Future<void> showPeriodicLocalNotification({
@@ -199,8 +248,20 @@ class NotificationService {
   }
 
   void selectNotification(String? payload) {
-    if (payload != null && payload.isNotEmpty) {
-      behaviorSubject.add(payload);
+    if (payload == null || payload.isEmpty) {
+      return;
+    }
+
+    behaviorSubject.add(payload);
+
+    if (payload == 'NoScreenTimeStart') {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+        builder: (context) => NoScreenTimeStarts(),
+      ));
+    } else if (payload == 'SetSleepTime') {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+        builder: (context) => SleepTimeSelect(),
+      ));
     }
   }
 

@@ -5,14 +5,14 @@ import 'package:no_screen_before_sleep/utils/notification_service.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-class SleepTimeSelectScreen extends StatefulWidget {
-  const SleepTimeSelectScreen({Key? key}) : super(key: key);
+class SleepTimeSelect extends StatefulWidget {
+  const SleepTimeSelect({Key? key}) : super(key: key);
 
   @override
-  State<SleepTimeSelectScreen> createState() => _SleepTimeSelectScreenState();
+  State<SleepTimeSelect> createState() => _SleepTimeSelectState();
 }
 
-class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
+class _SleepTimeSelectState extends State<SleepTimeSelect> {
   late final NotificationService notificationService;
   TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
   bool timeSelected = false;
@@ -34,7 +34,7 @@ class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
     TimeOfDay? selectedTime = await showTimePicker(
         initialTime: initTime,
         context: context,
-        helpText: "When do1 you want to sleep?");
+        helpText: "When do you want to sleep?");
 
     if (selectedTime != null) {
       selectedToD = selectedTime;
@@ -70,14 +70,14 @@ class _SleepTimeSelectScreenState extends State<SleepTimeSelectScreen> {
                             await selectTimeDialog(context);
                             if (timeSelected) {
                               await notificationService
-                                  .scheduleFixedTimeLocalNotification(
-                                      id: 1,
-                                      title: "Put your phone down",
-                                      body: "Your NoScreen time starts now.",
-                                      payload: "No Screen time is active!",
-                                      hour: selectedToD.hour,
-                                      minute: selectedToD.minute,
-                                      second: 0);
+                                  .scheduleNoScreenReminderNotification(
+                                id: 1,
+                                title: "Put your phone down",
+                                body: "Your NoScreen time starts now.",
+                                payload: "NoScreenTimeStart",
+                                hour: selectedToD.hour,
+                                minute: selectedToD.minute,
+                              );
                             }
                           },
                           child: const Text('Select TimeOfDay'))),

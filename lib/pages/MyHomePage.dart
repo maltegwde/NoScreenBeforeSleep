@@ -40,43 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    await notificationService.showLocalNotification(
-                      id: 1,
-                      title: "Put your phone down",
-                      body: "Your NoScreen time starts now.",
-                      payload: "No Screen time is active!",
-                    );
-                  },
-                  child: const Text("Schedule fixed time notification")),
-            ],
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            ElevatedButton(
-                onPressed: () async {
-                  await notificationService.scheduleDelayedLocalNotification(
-                      id: 2,
-                      title: "Drink Water",
-                      body: "Time to drink some water!",
-                      payload: "You just took water! Huurray!",
-                      duration: Duration(seconds: 5));
-                },
-                child: const Text("Schedule delayed notification "))
-          ]),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  notificationService.cancelAllNotifications();
-                },
-                child: const Text(
-                  "Cancel All Notifications",
-                ),
-              )
-            ],
+            children: [Text("Sample text")],
           ),
         ],
       ),
