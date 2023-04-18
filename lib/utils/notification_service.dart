@@ -260,7 +260,7 @@ class NotificationService {
       ));
     } else if (payload == 'SetSleepTime') {
       navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => SleepTimeSelect(),
+        builder: (context) => SleepTimeSelect(launchedFromNotification: true),
       ));
     }
   }

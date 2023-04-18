@@ -6,7 +6,12 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class SleepTimeSelect extends StatefulWidget {
-  const SleepTimeSelect({Key? key}) : super(key: key);
+  final bool launchedFromNotification;
+
+  const SleepTimeSelect({
+    Key? key,
+    this.launchedFromNotification = false,
+  }) : super(key: key);
 
   @override
   State<SleepTimeSelect> createState() => _SleepTimeSelectState();
@@ -14,6 +19,7 @@ class SleepTimeSelect extends StatefulWidget {
 
 class _SleepTimeSelectState extends State<SleepTimeSelect> {
   late final NotificationService notificationService;
+
   TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
   bool timeSelected = false;
 
@@ -32,9 +38,10 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
     TimeOfDay initTime = TimeOfDay(hour: now.hour, minute: now.minute);
 
     TimeOfDay? selectedTime = await showTimePicker(
-        initialTime: initTime,
-        context: context,
-        helpText: "When do you want to sleep?");
+      initialTime: initTime,
+      context: context,
+      helpText: "When do you want to sleep?",
+    );
 
     if (selectedTime != null) {
       selectedToD = selectedTime;
@@ -46,6 +53,13 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
 
   @override
   Widget build(BuildContext context) {
+    String textViewContent = "By which time\n   do you plan\n     to sleep?";
+
+    if (widget.launchedFromNotification) {
+      textViewContent =
+          "Welcome back!\nBy which time\n   do you plan\n     to sleep?";
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text(MyHomePage.title),
@@ -60,7 +74,7 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
                       margin: const EdgeInsets.only(top: 80),
                       alignment: Alignment.center,
                       child: Text(
-                        "By which time\n   do you plan\n     to sleep?",
+                        textViewContent,
                         textScaleFactor: 2.8,
                       )),
                   Container(
