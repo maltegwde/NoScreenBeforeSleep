@@ -1,3 +1,4 @@
+import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
@@ -11,6 +12,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<AppUsageInfo> _infos = [];
   late final NotificationService notificationService;
   TimeOfDay selectedToD = TimeOfDay(hour: 22, minute: 0);
 
@@ -21,6 +23,31 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  void getUsageStats() async {
+    try {
+      DateTime endDate = DateTime.now();
+      DateTime startDate = endDate.subtract(Duration(hours: 1));
+      List<AppUsageInfo> infoList =
+          await AppUsage().getAppUsage(startDate, endDate);
+      setState(() => _infos = infoList);
+
+      int totalTimeMinutes = 0;
+
+      for (var application in infoList) {
+        print(application.appName);
+        print(application.usage.inMinutes);
+
+        if (application.appName != "no_screen_before_sleep") {
+          totalTimeMinutes += application.usage.inMinutes;
+        }
+      }
+
+      print(totalTimeMinutes);
+    } on AppUsageException catch (exception) {
+      print(exception);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,22 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text(MyHomePage.title),
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 60),
-            child: Image.asset(
-              "assets/images/nsbs_icon_large.png",
-              width: 240,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [Text("Sample text")],
-          ),
-        ],
-      ),
+      body: ListView.builder(
+          itemCount: _infos.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+                title: Text(_infos[index].appName),
+                trailing: Text(_infos[index].usage.toString()));
+          }),
+      floatingActionButton: FloatingActionButton(
+          onPressed: getUsageStats, child: Icon(Icons.file_download)),
     );
   }
 }

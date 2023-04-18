@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
 import 'package:no_screen_before_sleep/pages/NoScreenTimeStarts.dart';
 import 'package:no_screen_before_sleep/pages/SleepTimeSelect.dart';
 import 'package:rxdart/subjects.dart';
