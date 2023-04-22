@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
+import 'package:no_screen_before_sleep/main.dart';
+import 'package:no_screen_before_sleep/utils/cache_provider.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
-import 'package:timezone/data/latest_all.dart' as tz;
+//import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class SleepTimeSelect extends StatefulWidget {
@@ -23,11 +24,15 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
   TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
   bool timeSelected = false;
 
+  String? noscreenTimeLength = HiveCache().getString('noscreen-time-length');
+
   @override
   void initState() {
     notificationService = NotificationService();
     notificationService.initializePlatformNotifications();
     super.initState();
+
+    print("noscreenTimeLength: $noscreenTimeLength");
   }
 
   Future<void> selectTimeDialog(BuildContext context) async {
@@ -61,42 +66,45 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(MyHomePage.title),
-          centerTitle: true,
-        ),
-        body: Builder(
-          builder: (context) {
-            return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                      margin: const EdgeInsets.only(top: 80),
-                      alignment: Alignment.center,
-                      child: Text(
-                        textViewContent,
-                        textScaleFactor: 2.8,
-                      )),
-                  Container(
-                      margin: const EdgeInsets.only(bottom: 150),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            await selectTimeDialog(context);
-                            if (timeSelected) {
-                              await notificationService
-                                  .scheduleNoScreenReminderNotification(
-                                id: 1,
-                                title: "Put your phone down",
-                                body: "Your NoScreen time starts now.",
-                                payload: "NoScreenTimeStart",
-                                hour: selectedToD.hour,
-                                minute: selectedToD.minute,
-                              );
-                            }
-                          },
-                          child: const Text('Select TimeOfDay'))),
-                ]);
-          },
-        ));
+      appBar: AppBar(
+        title: const Text(MyApp.title),
+        centerTitle: true,
+      ),
+      body: Builder(
+        builder: (context) {
+          return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    margin: const EdgeInsets.only(top: 80),
+                    alignment: Alignment.center,
+                    child: Text(
+                      textViewContent,
+                      textScaleFactor: 2.8,
+                    )),
+                Container(
+                    margin: const EdgeInsets.only(bottom: 150),
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          await selectTimeDialog(context);
+                          if (timeSelected) {
+                            await notificationService
+                                .scheduleNoScreenReminderNotification(
+                              id: 1,
+                              title: "Put your phone down",
+                              body: "Your NoScreen time starts now.",
+                              payload: "NoScreenTimeStart",
+                              hour: selectedToD.hour,
+                              minute: selectedToD.minute,
+                            );
+                          }
+                        },
+                        child: const Text('Select TimeOfDay'))),
+              ]);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: openSettingsView, child: Icon(Icons.settings)),
+    );
   }
 }
