@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:no_screen_before_sleep/main.dart';
+import 'package:no_screen_before_sleep/utils/NoScreenTimer.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
 class NoScreenTimeStarts extends StatefulWidget {
@@ -46,6 +47,8 @@ class _NoScreenTimeStartsState extends State<NoScreenTimeStarts> {
                         onPressed: () {
                           print("NoScreen time started!");
                           //TODO: start NoScreen time.
+
+                          //var nst = NoScreenTimer();
                         },
                         child: const Text('OK'))),
               ]);

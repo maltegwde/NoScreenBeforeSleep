@@ -7,6 +7,9 @@ package="com.example.no_screen_before_sleep">
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
+<uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:label="NoScreenBeforeSleep"
         android:name="${applicationName}"

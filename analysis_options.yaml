@@ -9,3 +9,4 @@ linter:
     prefer_const_constructors_in_immutables: false
     avoid_print: false
     file_names: false
+    empty_constructor_bodies: false

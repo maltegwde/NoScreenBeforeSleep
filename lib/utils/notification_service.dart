@@ -183,7 +183,7 @@ class NotificationService {
 
     tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
-    Duration diff = _nextInstanceOfLocalTime(
+    Duration diff = nextInstanceOfLocalTime(
             hour: notificationTime.hour, minute: notificationTime.minute)
         .difference(now);
 
@@ -220,7 +220,7 @@ class NotificationService {
     );
   }
 
-  tz.TZDateTime _nextInstanceOfLocalTime({
+  tz.TZDateTime nextInstanceOfLocalTime({
     required int hour,
     required int minute,
     int second = 0,

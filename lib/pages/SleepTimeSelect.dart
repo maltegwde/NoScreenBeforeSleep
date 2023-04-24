@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:no_screen_before_sleep/main.dart';
-import 'package:no_screen_before_sleep/utils/cache_provider.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
 //import 'package:timezone/data/latest_all.dart' as tz;
@@ -24,15 +23,11 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
   TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
   bool timeSelected = false;
 
-  String? noscreenTimeLength = HiveCache().getString('noscreen-time-length');
-
   @override
   void initState() {
     notificationService = NotificationService();
     notificationService.initializePlatformNotifications();
     super.initState();
-
-    print("noscreenTimeLength: $noscreenTimeLength");
   }
 
   Future<void> selectTimeDialog(BuildContext context) async {

@@ -22,6 +22,9 @@ dependencies:
   app_usage: ^2.1.1
   flutter_settings_screens: ^0.3.3-null-safety+2
   hive: ^2.2.3
+  workmanager: ^0.5.1
+  shared_preferences: ^2.1.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
