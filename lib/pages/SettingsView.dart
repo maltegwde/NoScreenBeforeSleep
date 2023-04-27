@@ -6,8 +6,6 @@ import 'package:no_screen_before_sleep/MySettings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsView extends StatefulWidget {
-  MySettings tmp = MySettings();
-
   SettingsView({super.key, settings});
 
   @override
@@ -17,13 +15,13 @@ class SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<SettingsView> {
   MySettings settings = MySettings();
 
-  String reminder_time = "Loading...";
+  String str_reminder_time = "Loading...";
 
   Future<void> loadReminderTime() async {
     await settings.loadValues();
 
     setState(() {
-      reminder_time = settings.getReminderTime();
+      str_reminder_time = settings.getReminderTime();
     });
   }
 
@@ -47,20 +45,15 @@ class _SettingsViewState extends State<SettingsView> {
       await loadReminderTime();
 
       setState(() {
-        //settings.reminderTime = selectedTime;
-        reminder_time = "${selectedTime.hour}:${selectedTime.minute}";
-        //loadReminderTime();
+        str_reminder_time = selectedTime.format(context);
       });
 
-      print('Selected time: ${selectedTime.hour}:${selectedTime.minute}');
+      print('Selected time: $str_reminder_time');
       print("Writing $selectedTime to cache");
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      String selectedTimeToString =
-          "${selectedTime.hour}:${selectedTime.minute}";
-
-      prefs.setString("reminder-time", selectedTimeToString);
+      prefs.setString("reminder-time",
+          str_reminder_time); // ensure, that reminder time is formatted correctly
     }
 
     return selectedTime;
@@ -76,7 +69,7 @@ class _SettingsViewState extends State<SettingsView> {
             title: 'Settings',
             children: <Widget>[
               SimpleSettingsTile(
-                title: reminder_time,
+                title: str_reminder_time,
                 titleTextStyle: TextStyle(fontSize: 20),
                 subtitle:
                     'When do you want to be notified to set your sleep time?',
@@ -124,8 +117,6 @@ class _SettingsViewState extends State<SettingsView> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: openHomePage, child: Icon(Icons.home)),
     );
   }
 }

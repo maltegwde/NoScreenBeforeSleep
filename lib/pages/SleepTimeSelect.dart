@@ -53,7 +53,7 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
 
   @override
   Widget build(BuildContext context) {
-    String textViewContent = "By which time\n   do you plan\n     to sleep?";
+    String textViewContent = "By which time do you plan to sleep?";
 
     if (widget.launchedFromNotification) {
       textViewContent =
@@ -71,11 +71,12 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                    margin: const EdgeInsets.only(top: 80),
+                    margin: const EdgeInsets.only(top: 80, left: 80, right: 80),
                     alignment: Alignment.center,
                     child: Text(
                       textViewContent,
                       textScaleFactor: 2.8,
+                      textAlign: TextAlign.center,
                     )),
                 Container(
                     margin: const EdgeInsets.only(bottom: 150),

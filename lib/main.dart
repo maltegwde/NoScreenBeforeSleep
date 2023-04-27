@@ -1,6 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:workmanager/workmanager.dart';
+
+import 'package:no_screen_before_sleep/MySettings.dart';
 import 'package:no_screen_before_sleep/pages/MyHomePage.dart';
 import 'package:no_screen_before_sleep/pages/SettingsView.dart';
 import 'package:no_screen_before_sleep/pages/SleepTimeSelect.dart';
@@ -34,25 +39,26 @@ Future<void> main() async {
   NotificationService notificationService = NotificationService();
   notificationService.initializePlatformNotifications();
 
+  MySettings settings = MySettings();
+  await settings.loadValues();
+
   // daily notification at 6pm
   notificationService.scheduleDailyLocalNotification(
       id: 12,
       title: "Set your sleep time!",
       body: "When will you go to sleep?",
       payload: "SetSleepTime",
-      notificationTime: TimeOfDay(hour: 17, minute: 31));
+      notificationTime: settings.reminderTime);
 
   await initSettings();
 
   runApp(MyApp());
 }
 
-Future<ValueNotifier<Color>> initSettings() async {
+Future<void> initSettings() async {
   await Settings.init(
     cacheProvider: SharePreferenceCache(),
   );
-  final _accentColor = ValueNotifier(Colors.blueAccent);
-  return _accentColor;
 }
 
 class MyApp extends StatelessWidget {

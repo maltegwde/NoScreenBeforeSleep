@@ -7,7 +7,7 @@ class MySettings {
   MySettings._internal() {}
 
   TimeOfDay reminderTime = TimeOfDay(hour: 18, minute: 0);
-  Duration? noScreenTimeStart;
+  TimeOfDay? noScreenTimeStart;
   Duration? noScreenTimeDuration;
 
   TimeOfDay? selectedSleepTime;
@@ -33,7 +33,10 @@ class MySettings {
     String hours = reminderTime.hour.toString();
     String minutes = reminderTime.minute.toString();
 
-    // 11:0 -> 11:00
+    // 7:0 -> 07:00
+    if (reminderTime.hour.toString().length == 1) {
+      hours = "0$hours";
+    }
     if (reminderTime.minute.toString().length == 1) {
       minutes = "0$minutes";
     }
