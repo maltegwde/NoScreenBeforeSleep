@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:no_screen_before_sleep/color_schemes.g.dart';
 
 import 'package:no_screen_before_sleep/main.dart';
 import 'package:no_screen_before_sleep/MySettings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsView extends StatefulWidget {
   SettingsView({super.key, settings});
@@ -73,15 +71,6 @@ class _SettingsViewState extends State<SettingsView> {
           SettingsGroup(
             title: 'Settings',
             children: <Widget>[
-              /*
-              SimpleSettingsTile(
-                title: str_reminder_time,
-                titleTextStyle: TextStyle(fontSize: 20),
-                subtitle:
-                    'When do you want to be notified to schedule a ScreenNap?',
-                onTap: () => selectTimeDialog(context),
-              ),
-              */
               DropDownSettingsTile<int>(
                 title: 'ScreenNap duration',
                 subtitle: 'Adjust the duration of a screen nap',

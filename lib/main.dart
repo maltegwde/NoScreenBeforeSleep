@@ -10,8 +10,6 @@ import 'package:no_screen_before_sleep/pages/ScreenNapSelect.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 import 'package:no_screen_before_sleep/color_schemes.g.dart';
 
-import 'package:timezone/timezone.dart' as tz;
-
 GlobalKey<NavigatorState> navigatorKey =
     GlobalKey<NavigatorState>(debugLabel: "Main Navigator");
 
@@ -57,16 +55,6 @@ Future<void> main() async {
 
   MySettings settings = MySettings();
   await settings.loadValues();
-
-  /*
-  // daily notification at 6pm
-  notificationService.scheduleDailyLocalNotification(
-      id: 12,
-      title: "Set your sleep time!",
-      body: "When will you go to sleep?",
-      payload: "SetSleepTime",
-      notificationTime: settings.reminderTime);
-  */
 
   await initSettings();
 

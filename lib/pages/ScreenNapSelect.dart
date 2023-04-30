@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart' as tz;
+
 import 'package:no_screen_before_sleep/MySettings.dart';
 import 'package:no_screen_before_sleep/main.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
-import 'package:timezone/timezone.dart' as tz;
-
 class ScreenNapSelect extends StatefulWidget {
-  final bool launchedFromNotification;
-
   const ScreenNapSelect({
     Key? key,
-    this.launchedFromNotification = false,
   }) : super(key: key);
 
   @override
@@ -27,6 +24,9 @@ class _ScreenNapSelectState extends State<ScreenNapSelect> {
     notificationService = NotificationService();
     notificationService.initializePlatformNotifications();
     super.initState();
+
+    // TODO: add Timer.periodic(Duration(seconds: 1), (Timer t) => doSomething());
+    //  call settings.isScreenNapActive(). if true, open ScreenNapActive view
   }
 
   Future<TimeOfDay?> selectTimeDialog(BuildContext context) async {
@@ -41,7 +41,7 @@ class _ScreenNapSelectState extends State<ScreenNapSelect> {
     );
 
     if (selectedTime != null) {
-      print('Selected time: ${selectedToD!.to24hours()}');
+      print('Selected time: ${selectedTime.to24hours()}');
     }
 
     return selectedTime;
@@ -50,13 +50,6 @@ class _ScreenNapSelectState extends State<ScreenNapSelect> {
   @override
   Widget build(BuildContext context) {
     String textViewContent = "Set time for your next screen nap!";
-
-    /*
-    if (widget.launchedFromNotification) {
-      textViewContent =
-          "Welcome back!\nBy which time\n   do you plan\n     to sleep?";
-    }
-    */
 
     return Scaffold(
       appBar: AppBar(

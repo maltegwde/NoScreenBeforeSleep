@@ -1,5 +1,6 @@
-import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
+
+import 'package:app_usage/app_usage.dart';
 
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 import 'package:no_screen_before_sleep/main.dart';
@@ -26,6 +27,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void getUsageStats() async {
     try {
+      // TODO: DateTime -> TZDateTime;
+
+      // TODO: getAppUsage stateDate = settings.screenNapStart
+
       DateTime now = DateTime.now();
       //DateTime startDate = endDate.subtract(Duration(days: 1));
 

@@ -11,7 +11,6 @@ class MySettings {
 
   TimeOfDay reminderTime = TimeOfDay(hour: 18, minute: 0);
 
-  //TimeOfDay? screenNapStart;
   Duration? screenNapDuration;
 
   tz.TZDateTime? screenNapStart;
@@ -36,17 +35,24 @@ class MySettings {
 
     // ScreenNap-duration
     int? prefScreenNapDuration = prefs.getInt("ScreenNap-duration");
-    screenNapDuration = minutesToDuration(prefScreenNapDuration!);
+    screenNapDuration = prefScreenNapDuration != null
+        ? minutesToDuration(prefScreenNapDuration)
+        : null;
     print("loaded from cache: ScreenNapDuration $screenNapDuration");
 
     // ScreenNapStart
     String? strScreenNapStart = prefs.getString("ScreenNapStart");
-    screenNapStart = tz.TZDateTime.parse(tz.local, strScreenNapStart!);
+    screenNapStart = strScreenNapStart != null
+        ? tz.TZDateTime.parse(tz.local, strScreenNapStart)
+        : null;
     print("loaded from cache: ScreenNapStart ${screenNapStart.toString()}");
 
     // ScreenNapEnd
     String? strScreenNapEnd = prefs.getString("ScreenNapEnd");
-    screenNapEnd = tz.TZDateTime.parse(tz.local, strScreenNapEnd!);
+    screenNapEnd = strScreenNapEnd != null
+        ? tz.TZDateTime.parse(tz.local, strScreenNapEnd)
+        : null;
+
     print("loaded from cache: ScreenNapEnd ${screenNapEnd.toString()}");
   }
 
@@ -57,13 +63,17 @@ class MySettings {
   }
 
   bool isScreenNapActive() {
-    print("screenNapDuration: ${screenNapDuration.toString()}");
-    print("prefScreenNapStart: ${screenNapStart.toString()}");
-    print("prefScreenNapEnd: ${screenNapEnd.toString()}");
-
     tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
-    return now.isAfter(screenNapStart!) && now.isBefore(screenNapEnd!);
+    if (screenNapStart == null || screenNapEnd == null) {
+      return false;
+    }
+
+    bool screenNapActive =
+        now.isAfter(screenNapStart!) && now.isBefore(screenNapEnd!);
+
+    print("screenNapActive: $screenNapActive");
+    return screenNapActive;
   }
 
   String getReminderTime() {

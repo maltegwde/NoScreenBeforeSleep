@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:no_screen_before_sleep/pages/ScreenNapActive.dart';
-import 'package:no_screen_before_sleep/pages/ScreenNapSelect.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'package:no_screen_before_sleep/main.dart';
+import 'package:no_screen_before_sleep/pages/ScreenNapActive.dart';
+import 'package:no_screen_before_sleep/pages/ScreenNapSelect.dart';
 
 class NotificationService {
   NotificationService();
@@ -253,7 +252,7 @@ class NotificationService {
       ));
     } else if (payload == 'SetSleepTime') {
       navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => ScreenNapSelect(launchedFromNotification: true),
+        builder: (context) => ScreenNapSelect(),
       ));
     }
   }

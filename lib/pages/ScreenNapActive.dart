@@ -1,14 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:no_screen_before_sleep/MySettings.dart';
-
-import 'package:no_screen_before_sleep/main.dart';
-import 'package:no_screen_before_sleep/utils/ScreenNapTimer.dart';
-import 'package:no_screen_before_sleep/utils/notification_service.dart';
-
-import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import 'package:no_screen_before_sleep/MySettings.dart';
+import 'package:no_screen_before_sleep/main.dart';
+import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
 class ScreenNapActive extends StatefulWidget {
   const ScreenNapActive({Key? key}) : super(key: key);
@@ -19,7 +15,7 @@ class ScreenNapActive extends StatefulWidget {
 
 class _ScreenNapActiveState extends State<ScreenNapActive> {
   late NotificationService notificationService;
-  //ScreenNapTimer? snt;
+
   Timer? timer;
 
   String timeLeft = "Waiting...";
