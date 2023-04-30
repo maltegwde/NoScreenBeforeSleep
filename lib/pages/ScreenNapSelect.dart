@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:no_screen_before_sleep/MySettings.dart';
 import 'package:no_screen_before_sleep/main.dart';
 import 'package:no_screen_before_sleep/utils/notification_service.dart';
 
-//import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-class SleepTimeSelect extends StatefulWidget {
+class ScreenNapSelect extends StatefulWidget {
   final bool launchedFromNotification;
 
-  const SleepTimeSelect({
+  const ScreenNapSelect({
     Key? key,
     this.launchedFromNotification = false,
   }) : super(key: key);
 
   @override
-  State<SleepTimeSelect> createState() => _SleepTimeSelectState();
+  State<ScreenNapSelect> createState() => _ScreenNapSelectState();
 }
 
-class _SleepTimeSelectState extends State<SleepTimeSelect> {
+class _ScreenNapSelectState extends State<ScreenNapSelect> {
   late final NotificationService notificationService;
 
-  TimeOfDay selectedToD = TimeOfDay(hour: 12, minute: 0);
-  bool timeSelected = false;
+  TimeOfDay? selectedToD = TimeOfDay(hour: 12, minute: 0);
 
   @override
   void initState() {
@@ -30,9 +29,7 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
     super.initState();
   }
 
-  Future<void> selectTimeDialog(BuildContext context) async {
-    timeSelected = false;
-
+  Future<TimeOfDay?> selectTimeDialog(BuildContext context) async {
     // TimeOfDay.now() gives wrong time (utc). workaround:
     tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     TimeOfDay initTime = TimeOfDay(hour: now.hour, minute: now.minute);
@@ -44,21 +41,22 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
     );
 
     if (selectedTime != null) {
-      selectedToD = selectedTime;
-      timeSelected = true;
-      print("timeSelected: $timeSelected");
-      print('Selected time: ${selectedToD.hour}:${selectedToD.minute}');
+      print('Selected time: ${selectedToD!.to24hours()}');
     }
+
+    return selectedTime;
   }
 
   @override
   Widget build(BuildContext context) {
-    String textViewContent = "By which time do you plan to sleep?";
+    String textViewContent = "Set time for your next screen nap!";
 
+    /*
     if (widget.launchedFromNotification) {
       textViewContent =
           "Welcome back!\nBy which time\n   do you plan\n     to sleep?";
     }
+    */
 
     return Scaffold(
       appBar: AppBar(
@@ -82,16 +80,36 @@ class _SleepTimeSelectState extends State<SleepTimeSelect> {
                     margin: const EdgeInsets.only(bottom: 150),
                     child: ElevatedButton(
                         onPressed: () async {
-                          await selectTimeDialog(context);
-                          if (timeSelected) {
+                          selectedToD = await selectTimeDialog(context);
+                          if (selectedToD != null) {
+                            var settings = MySettings();
+
+                            tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+                            tz.TZDateTime screenNapStart = tz.TZDateTime(
+                                tz.local,
+                                now.year,
+                                now.month,
+                                now.day,
+                                selectedToD!.hour,
+                                selectedToD!.minute);
+
+                            settings.setString(
+                                "ScreenNapStart", screenNapStart.toString());
+
+                            tz.TZDateTime screenNapEnd =
+                                screenNapStart.add(settings.screenNapDuration!);
+
+                            settings.setString(
+                                "ScreenNapEnd", screenNapEnd.toString());
+
                             await notificationService
                                 .scheduleNoScreenReminderNotification(
                               id: 1,
                               title: "Put your phone down",
-                              body: "Your NoScreen time starts now.",
-                              payload: "NoScreenTimeStart",
-                              hour: selectedToD.hour,
-                              minute: selectedToD.minute,
+                              body: "ScreenNap starts now.",
+                              payload: "ScreenNapStart",
+                              hour: selectedToD!.hour,
+                              minute: selectedToD!.minute,
                             );
                           }
                         },

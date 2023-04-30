@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:no_screen_before_sleep/color_schemes.g.dart';
 
 import 'package:no_screen_before_sleep/main.dart';
 import 'package:no_screen_before_sleep/MySettings.dart';
@@ -37,6 +38,12 @@ class _SettingsViewState extends State<SettingsView> {
     TimeOfDay? selectedTime = await showTimePicker(
       initialTime: settings.reminderTime, // set initial time to the saved one
       context: context,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
       helpText:
           'Select the time for the "When will you go to sleep?" notification',
     );
@@ -45,15 +52,13 @@ class _SettingsViewState extends State<SettingsView> {
       await loadReminderTime();
 
       setState(() {
-        str_reminder_time = selectedTime.format(context);
+        str_reminder_time = selectedTime.to24hours();
       });
 
       print('Selected time: $str_reminder_time');
       print("Writing $selectedTime to cache");
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("reminder-time",
-          str_reminder_time); // ensure, that reminder time is formatted correctly
+      settings.setString("reminder-time", str_reminder_time);
     }
 
     return selectedTime;
@@ -68,49 +73,30 @@ class _SettingsViewState extends State<SettingsView> {
           SettingsGroup(
             title: 'Settings',
             children: <Widget>[
+              /*
               SimpleSettingsTile(
                 title: str_reminder_time,
                 titleTextStyle: TextStyle(fontSize: 20),
                 subtitle:
-                    'When do you want to be notified to set your sleep time?',
+                    'When do you want to be notified to schedule a ScreenNap?',
                 onTap: () => selectTimeDialog(context),
               ),
+              */
               DropDownSettingsTile<int>(
-                title: 'NoScreenTime start',
-                subtitle:
-                    'Choose the duration of screen-free time before sleep',
-                settingKey: 'noscreentime-start',
+                title: 'ScreenNap duration',
+                subtitle: 'Adjust the duration of a screen nap',
+                settingKey: 'ScreenNap-duration',
                 values: <int, String>{
-                  15: '15min prior',
-                  30: '30min prior',
-                  60: '1 hour prior',
-                  120: '2 hours prior',
+                  30: '30 minutes',
+                  60: '1 hour',
+                  120: '2 hours',
+                  240: '4 hours',
+                  360: '6 hours',
                 },
-                selected: 60,
+                selected: 240,
                 onChange: (value) {
-                  debugPrint('noscreentime-start: $value');
-                },
-              ),
-              TextInputSettingsTile(
-                title: 'NoScreenTime duration',
-                settingKey: 'noscreentime-duration',
-                initialValue: '6',
-                keyboardType: TextInputType.number,
-                /*
-                  validator: (String? timeLengthInput) {
-                    if (timeLengthInput != null &&
-                        (int.parse(timeLengthInput) > 3)) {
-                      //setState(() => _infos = infoList);
-                      return null;
-                    }
-                    //TODO: insert good error message
-                    return "NoScreen Time length error.";
-                  },
-                  */
-                borderColor: Colors.blueAccent,
-                errorColor: Colors.deepOrangeAccent,
-                onChange: (value) {
-                  debugPrint('noscreentime-duration: $value');
+                  debugPrint('ScreenNap-duration: $value');
+                  settings.screenNapDuration = minutesToDuration(value);
                 },
               ),
             ],

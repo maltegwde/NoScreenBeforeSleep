@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:no_screen_before_sleep/pages/NoScreenTimeStarts.dart';
-import 'package:no_screen_before_sleep/pages/SleepTimeSelect.dart';
+import 'package:no_screen_before_sleep/pages/ScreenNapActive.dart';
+import 'package:no_screen_before_sleep/pages/ScreenNapSelect.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -11,8 +11,6 @@ import 'package:no_screen_before_sleep/main.dart';
 
 class NotificationService {
   NotificationService();
-
-  final Duration noScreenBeforeSleepDuration = Duration(hours: 2, minutes: 0);
 
   final BehaviorSubject<String> behaviorSubject = BehaviorSubject();
   final _localNotifications = FlutterLocalNotificationsPlugin();
@@ -137,9 +135,6 @@ class NotificationService {
     tz.TZDateTime noScreenNotificationTime =
         tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
 
-    noScreenNotificationTime =
-        noScreenNotificationTime.subtract(noScreenBeforeSleepDuration);
-
     TimeOfDay notificationTime = TimeOfDay(
         hour: noScreenNotificationTime.hour,
         minute: noScreenNotificationTime.minute);
@@ -252,13 +247,13 @@ class NotificationService {
 
     behaviorSubject.add(payload);
 
-    if (payload == 'NoScreenTimeStart') {
+    if (payload == 'ScreenNapStart') {
       navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => NoScreenTimeStarts(),
+        builder: (context) => ScreenNapActive(),
       ));
     } else if (payload == 'SetSleepTime') {
       navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => SleepTimeSelect(launchedFromNotification: true),
+        builder: (context) => ScreenNapSelect(launchedFromNotification: true),
       ));
     }
   }
